@@ -80,14 +80,12 @@ Game.prototype.handleGestureEnd = function(e) {
 	}
 }
 
-Game.prototype.handleScroll = function(e) {
-	e.preventDefault();
-
-	var scrollValue = (e.wheelDelta == undefined) ? e.detail * -1 : e.wheelDelta;
-
-	if (scrollValue >= 0) {
+Game.prototype.handleScroll = function(delta) 
+{
+	if (delta >= 0) {
 		this.zoomIn();
-	} else {
+	} 
+	if (delta < 0) {
 		this.zoomOut();
 	}
 }
@@ -306,6 +304,8 @@ Game.prototype.zoomIn = function() {
 	// Center the view
 	this.scrollPosition.y -= (this.grid.height * this.zoomHelper.level) + this.scrollPosition.y;
 	this.scrollPosition.x -= (this.grid.width * this.zoomHelper.level) + this.scrollPosition.x;
+	
+	this.draw();
 }
 
 Game.prototype.zoomOut = function() {
@@ -323,6 +323,8 @@ Game.prototype.zoomOut = function() {
 	// Center the view
 	this.scrollPosition.y -= (this.grid.height * this.zoomHelper.level) + this.scrollPosition.y;
 	this.scrollPosition.x -= (this.grid.width * this.zoomHelper.level) + this.scrollPosition.x;
+	
+	this.draw();
 }
 
 Game.prototype.rotateGrid = function(mW, mH, sW, sH) {

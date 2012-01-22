@@ -45,20 +45,30 @@ window.onload = function () {
 	}
 
 	// Set up the event listeners
-	window.addEventListener('resize', function() { g.doResize(); }, false);
-	canvas.addEventListener(pointer.DOWN, function(e) { g.handleMouseDown(e); }, false);
-	canvas.addEventListener(pointer.MOVE, function(e) { g.handleDrag(e); }, false);
-	document.body.addEventListener(pointer.UP, function(e) { g.handleMouseUp(e); }, false);
+	$(window).resize(function() { g.doResize(); });
+	$(canvas).mousedown(function(e) { g.handleMouseDown(e); });
+	$(canvas).mousemove(function(e) { g.handleDrag(e); });
+	$(canvas).mouseup(function(e) { g.handleMouseUp(e); });
 
 	if (Modernizr.touch){
 		// Detect gestures
 		document.body.addEventListener('gestureend', function(e) { g.handleGestureEnd(e); }, false);
 	} else {
-		document.body.addEventListener('keydown', function(e) { g.handleKeyDown(e); }, false);
+		$(document).keydown(function(e) { g.handleKeyDown(e); });
 
 		// Detect mousewheel scrolling
-		document.body.addEventListener('mousewheel', function(e) { g.handleScroll(e); }, false);
-		document.body.addEventListener('DOMMouseScroll', function(e) { g.handleScroll(e); }, false);
+		jQuery(function($) {
+			$(document.body).bind('mousewheel', function(e, delta) 
+			{
+				g.handleScroll(delta);
+			});
+		});
+		jQuery(function($) {
+			$(document.body).bind('DOMMouseScroll', function(e, delta) 
+			{
+				g.handleScroll(delta);
+			});
+		});
 	}
 
 	// Listen for GUI events
@@ -112,13 +122,8 @@ window.onload = function () {
 function selectTool(tool, elem) {
 
 	// Remove the "active" class from any element inside the div#tools ul
-	for (var i = 0, x = elem.parentNode.childNodes.length; i < x; i++) {
-		if (elem.parentNode.childNodes[i].tagName == "LI") {
-			elem.parentNode.childNodes[i].className = null;
-		}
-	}
-
-	elem.className += "active";
+	$('li').removeClass('active');
+	$(elem).addClass('active');
 
 	switch(tool) {
 		case Tools.SELECT:
